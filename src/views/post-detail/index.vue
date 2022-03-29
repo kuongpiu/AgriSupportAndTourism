@@ -9,7 +9,7 @@
       </el-carousel>
       <el-col :span="16">
         <post-content :post="{title: post.title, body: post.body}"/>
-        <comment/>
+        <comment :post-id="this.$route.params.id"/>
       </el-col>
       <el-col :span="8">
         <activity/>

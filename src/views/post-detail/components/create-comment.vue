@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <el-form :model="formComment">
-      <el-form-item prop="content">
-        <el-input v-model="formComment.content" type="textarea"/>
+    <el-form ref="formComment" :model="formComment">
+      <el-form-item prop="body">
+        <el-input v-model="formComment.body" type="textarea"/>
       </el-form-item>
       <div>
         <el-upload
@@ -28,12 +28,20 @@
 </template>
 
 <script>
+import {addComment} from "@/api/post";
+
 export default {
   name: 'CreateComment',
+  props: {
+    postId: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       formComment: {
-        content: '',
+        body: '',
         imageUrls: []
       },
       fileList: [],
@@ -83,12 +91,33 @@ export default {
       }
     },
     createComment() {
-      setTimeout(() => {
-        this.createButtonLoading = false
-      }, 1000)
+      const comment = Object.assign({}, {postId: this.postId, ...this.formComment})
+      addComment(comment)
+        .then(data => {
+          this.resetCommentFields()
+          this.$emit('refreshComments')
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('Lỗi khi tạo bình luận !')
+        })
+        .finally(() => {
+          this.createButtonLoading = false
+        })
+    },
+    resetCommentFields(){
+      this.$refs.formComment.resetFields()
+      this.fileList = []
+      this.initFormComment()
+    },
+    initFormComment(){
+      this.formComment = {
+        body: '',
+        imageUrls: []
+      }
     },
     isFormValid: function () {
-      return this.formComment.content.trim().length > 0 || this.formComment.imageUrls.length > 0
+      return this.formComment.body.trim().length > 0 || this.formComment.imageUrls.length > 0
     }
   }
 }

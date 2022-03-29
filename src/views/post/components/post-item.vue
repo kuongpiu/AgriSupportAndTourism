@@ -102,7 +102,7 @@ export default {
 
 .title {
   font-weight: 600;
-  height: 40px;
+  height: 36px;
   overflow: hidden;
   word-break: break-word;
 }
