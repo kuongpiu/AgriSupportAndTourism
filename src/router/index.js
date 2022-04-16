@@ -67,6 +67,33 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/farm',
+    component: Layout,
+    redirect: '/farm/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/farm/index'),
+        name: 'Quản lý vườn',
+        meta: {title: 'Quản lý vườn', icon: 'tree'}
+      }
+    ]
+  },
+  {
+    path: '/create-farm',
+    component: Layout,
+    redirect: 'create-farm/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/create-farm/index'),
+        name: 'Đăng ký vườn mới',
+        meta: {title: 'Đăng ký vườn mới'}
+      }
+    ]
+  },
+  {
     path: '/post',
     component: Layout,
     redirect: '/post/index',

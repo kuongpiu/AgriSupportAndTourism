@@ -1,13 +1,14 @@
 <template>
   <div class="container">
     <router-link :to="'/post/detail/' + post.id">
-      <el-card class="box-card"
-               :body-style="{padding: '0px'}"
-               shadow="hover"
-               @click="$emit('click', post)">
+      <el-card
+        class="box-card"
+        :body-style="{padding: '0px'}"
+        shadow="hover"
+        @click="$emit('click', post)">
         <div class="image-container">
           <img
-            :src="post.imageUrl"
+            :src="post.postImage"
             class="image"
             alt="image"/>
           <div class="tag-container">
@@ -19,10 +20,10 @@
         <div class="post-info">
           <span class="title">{{ post.title }}</span>
           <div class="user-info">
-            <el-avatar size="small" :src="post.imageUrl" fit="cover"></el-avatar>
+            <el-avatar size="small" :src="post.avatar" fit="cover"></el-avatar>
             <div class="name">
-              <span>Nông Văn Cương</span>
-              <i class="el-icon-check"></i>
+              <span>{{ post.createdName }}</span>
+              <!--              <i class="el-icon-check"></i>-->
             </div>
           </div>
           <div class="post-bottom">
@@ -31,8 +32,8 @@
               <span>{{ post.address }}</span>
             </div>
             <div>
-              <i class="icon el-icon-view"></i>
-              <span>3.4k</span>
+              <i class="icon el-icon-date"></i>
+              <span>{{ post.createdDate }}</span>
             </div>
           </div>
         </div>
@@ -48,9 +49,13 @@ export default {
     // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     post: {
       id: null,
-      imageUrl: '',
+      postImage: '',
+      avatar: '',
       title: '',
-      address: ''
+      createdName: '',
+      address: '',
+      createdDate: '',
+      createdTime: ''
     }
   }
 }
@@ -73,7 +78,7 @@ export default {
   height: 100%;
 }
 
-.image-container{
+.image-container {
   position: relative;
   width: 100%;
   height: calc(var(--height) - 140px);
@@ -84,16 +89,19 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+
 .tag-container {
   margin: 2px 0 0 0;
   position: absolute;
   top: 0;
   left: 0;
 }
-.tag{
+
+.tag {
   margin-left: 2px;
   font-size: x-small;
 }
+
 .post-info {
   padding: 5px 15px 15px 15px;
   display: flex;
@@ -128,11 +136,13 @@ export default {
   background-color: #00e56a;
   border: 1px solid black;
 }
-.icon{
+
+.icon {
   padding-right: 4px;
   color: #1a3bef;
 }
-.post-bottom{
+
+.post-bottom {
   margin-top: 15px;
   padding-top: 10px;
   display: flex;

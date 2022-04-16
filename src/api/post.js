@@ -1,11 +1,21 @@
 import request from "@/utils/request";
-import {getToken} from "@/utils/auth";
-import da from "element-ui/src/locale/lang/da";
 
 export function getAllPost() {
   return request({
     url: '/post/all',
     method: 'get'
+  })
+}
+
+export function getAllPostInPage(page, size, sort) {
+  return request({
+    url: '/post/page',
+    method: 'get',
+    params: {
+      page: page,
+      size: size,
+      sort: sort
+    }
   })
 }
 
@@ -17,7 +27,7 @@ export function getPostDetail(postId) {
   })
 }
 
-export function getCommentsByPostId(postId){
+export function getCommentsByPostId(postId) {
   return request({
     url: '/post/comment/all',
     method: 'get',
@@ -27,7 +37,7 @@ export function getCommentsByPostId(postId){
   })
 }
 
-export function addComment(data){
+export function addComment(data) {
   return request({
     url: '/post/comment',
     method: 'post',
@@ -35,7 +45,7 @@ export function addComment(data){
   })
 }
 
-export function updateComment(data){
+export function updateComment(data) {
   return request({
     url: '/post/comment',
     method: 'put',
@@ -43,7 +53,7 @@ export function updateComment(data){
   })
 }
 
-export function deleteComment(commentId){
+export function deleteComment(commentId) {
   return request({
     url: '/post/comment',
     method: 'delete',

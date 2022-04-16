@@ -9,19 +9,38 @@
         />
       </el-col>
     </el-row>
+    <div class="pagination-container">
+      <el-pagination
+        class="pagination"
+        background
+        hide-on-single-page
+        layout="prev, pager, next"
+        :current-page.sync="currentPage"
+        :pager-count="PAGER_COUNT"
+        :page-size="PAGE_SIZE"
+        :total="total"
+        @current-change="fetchPosts">
+      </el-pagination>
+    </div>
   </el-card>
 </template>
 
 <script>
 import PostItem from '@/views/post/components/post-item'
-import {getAllPost} from '@/api/post'
+import {getAllPost, getAllPostInPage} from '@/api/post'
 
+const PAGE_SIZE = 4
+const PAGER_COUNT = 5
 export default {
   name: 'Index',
   components: {PostItem},
   data: () => {
     return {
-      postList: []
+      postList: [],
+      PAGE_SIZE: PAGE_SIZE,
+      PAGER_COUNT: PAGER_COUNT,
+      currentPage: 1,
+      total: 0
     }
   },
   computed: {
@@ -34,14 +53,15 @@ export default {
   },
   methods: {
     fetchPosts() {
-      getAllPost()
+      getAllPostInPage(this.currentPage - 1, this.PAGE_SIZE)
         .then(data => {
           console.log(data)
-          this.postList = data
+          this.postList = data.content
+          this.total = data.totalElements
         })
-        .catch(error => {
+        .catch(err => {
           this.$message.error('Tải bài viết thất bại !')
-          console.log(error)
+          console.log(err)
         })
     }
   }
@@ -49,11 +69,16 @@ export default {
 </script>
 
 <style scoped>
-.post-container{
+.post-container {
   display: flex;
   flex-flow: wrap row;
   justify-content: flex-start;
   align-items: center;
   margin-left: -30px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
 }
 </style>

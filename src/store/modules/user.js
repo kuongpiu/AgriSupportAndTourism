@@ -1,4 +1,4 @@
-import {login, logout, getInfo} from '@/api/user'
+import {login, logout, getInfo, updateAvatar, updateInfo} from '@/api/user'
 import {getToken, setToken, removeToken} from '@/utils/auth'
 import {resetRouter} from '@/router'
 
@@ -9,6 +9,7 @@ const getDefaultState = () => {
     name: '',
     avatar: '',
     address: '',
+    email: '',
     roles: []
   }
 }
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_ADDRESS: (state, address) => {
     state.address = address
+  },
+  SET_EMAIL: (state, email) => {
+    state.email = email
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -62,10 +66,10 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const {name, address, username, roles} = data
+        const {name, address, username, roles, email} = data
         let avatar = data.avatar
         if (avatar === null || avatar.length <= 0) {
-          avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
+          avatar = 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'
           data.avatar = avatar
         }
         commit('SET_NAME', name)
@@ -73,10 +77,31 @@ const actions = {
         commit('SET_USERNAME', username)
         commit('SET_ADDRESS', address)
         commit('SET_ROLES', roles)
+        commit('SET_EMAIL', email)
 
         resolve(data)
       }).catch(error => {
         reject(error)
+      })
+    })
+  },
+  updateAvatar({commit}, avatar) {
+    return new Promise((resolve, reject) => {
+      updateAvatar(avatar).then(data => {
+        commit('SET_AVATAR', avatar)
+        resolve(data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+
+  updateUserInfo({commit}, user) {
+    return new Promise((resolve, reject) => {
+      updateInfo(user).then(data => {
+        resolve(data)
+      }).catch(err => {
+        reject(err)
       })
     })
   },

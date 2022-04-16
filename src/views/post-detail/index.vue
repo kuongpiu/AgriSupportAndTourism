@@ -43,9 +43,10 @@ export default {
     getPostDetail(postId)
       .then(data => {
         this.post = data
-      }).catch(err => {
-      console.log(err)
-    })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

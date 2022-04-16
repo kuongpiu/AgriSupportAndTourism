@@ -26,18 +26,7 @@
         </el-tooltip>
       </li>
       <li class="list-item">
-        <el-tooltip content="Xóa bình luận này" placement="top" effect="dark" :open-delay="400">
-          <el-popconfirm
-            title="Xóa bình luận?"
-            confirm-button-text="Xóa"
-            cancel-button-text="Hủy bỏ"
-            icon="el-icon-info"
-            icon-color="red"
-            @onConfirm="handleDelete"
-          >
-            <el-button slot="reference" class="button" type="none" icon="el-icon-delete" circle></el-button>
-          </el-popconfirm>
-        </el-tooltip>
+        <el-button class="button" type="none" icon="el-icon-delete" circle @click="alertDelete"></el-button>
       </li>
       </span>
     </ul>
@@ -93,12 +82,26 @@ export default {
           console.log(err)
           this.$message.error('Lỗi khi xóa bình luận !')
         })
+    },
+    alertDelete() {
+      this.$confirm('Bình luận sẽ bị xóa vĩnh viễn, bạn có chắc không ?', 'Cảnh báo', {
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy',
+        type: 'warning'
+      }).then(() => {
+        this.handleDelete()
+      }).catch(() => {
+        console.log('cancel delete !')
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+p{
+  line-height: 20px;
+}
 .user-block {
   .username,
   .created-time {

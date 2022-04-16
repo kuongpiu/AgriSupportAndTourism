@@ -1,13 +1,16 @@
 <template>
   <el-form>
-    <el-form-item label="Name">
-      <el-input v-model.trim="user.name" />
+    <el-form-item label="Họ tên">
+      <el-input v-model="user.name"/>
     </el-form-item>
     <el-form-item label="Email">
-      <el-input v-model.trim="user.email" />
+      <el-input v-model.trim="user.email"/>
+    </el-form-item>
+    <el-form-item label="Địa chỉ">
+      <el-input v-model="user.address"/>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit">Update</el-button>
+      <el-button :loading="buttonUpdateLoading" type="primary" @click="submit">Cập nhật</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -20,18 +23,20 @@ export default {
       default: () => {
         return {
           name: '',
-          email: ''
+          email: '',
+          address: ''
         }
       }
     }
   },
+  data() {
+    return {
+      buttonUpdateLoading: false
+    }
+  },
   methods: {
     submit() {
-      this.$message({
-        message: 'User information has been updated successfully',
-        type: 'success',
-        duration: 5 * 1000
-      })
+      this.$emit('saveUserInfo', this.user)
     }
   }
 }

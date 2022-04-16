@@ -68,6 +68,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .box-card {
   margin-top: 20px;
 }

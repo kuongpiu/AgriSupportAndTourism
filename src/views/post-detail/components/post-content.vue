@@ -16,6 +16,7 @@ export default {
 .box-card{
   .body{
     clear: both;
+    line-height: 25px;
   }
   .icon-before{
     padding-right: 10px;

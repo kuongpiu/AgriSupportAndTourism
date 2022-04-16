@@ -115,6 +115,7 @@ export default {
               this.loading = false
             })
             .catch(() => {
+              this.$message.error('Đăng nhập không thành công, vui lòng thử lại')
               this.loading = false
             })
         } else {
