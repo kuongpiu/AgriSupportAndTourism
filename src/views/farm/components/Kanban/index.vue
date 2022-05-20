@@ -11,8 +11,8 @@
       @change="handleChangeEvent"
     >
       <el-card
-        v-for="element in list"
-        :key="element.id"
+        v-for="(element, index) in list"
+        :key="index"
         shadow="hover"
         body-style="padding: 0"
         class="board-item">

@@ -29,7 +29,7 @@
           <div class="post-bottom">
             <div>
               <i class="icon el-icon-location-outline"></i>
-              <span>{{ post.address }}</span>
+              <span>{{ post.province }}</span>
             </div>
             <div>
               <i class="icon el-icon-date"></i>
@@ -53,7 +53,10 @@ export default {
       avatar: '',
       title: '',
       createdName: '',
-      address: '',
+      detailAddress: '',
+      province: {},
+      district: {},
+      ward: {},
       createdDate: '',
       createdTime: ''
     }

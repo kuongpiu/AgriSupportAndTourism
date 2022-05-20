@@ -1,17 +1,18 @@
 <template>
   <el-card style="padding-bottom: 100px">
-    <router-link to="/create-farm">
-      <el-button
-        style="float: right"
-        size="small"
-        type="success"
-        icon="el-icon-folder-add">
-        Thêm vườn
-      </el-button>
-    </router-link>
     <div v-if="hasFarm">
+      <router-link to="/create-farm">
+        <el-button
+          style="float: right"
+          size="small"
+          type="success"
+          plain
+          icon="el-icon-folder-add">
+          Thêm
+        </el-button>
+      </router-link>
       <div style="clear: both">
-        <el-tabs v-model="activeFarm">
+        <el-tabs v-model="activeFarm" class="el-tabs">
           <el-tab-pane
             v-for="(farm, index) in farms"
             :key="farm.id"
@@ -21,24 +22,34 @@
         </el-tabs>
       </div>
       <el-card>
-        <div slot="header">
-          <span>{{ currentFarm.name }}</span>
-          <div style="float: right">
-            <el-button-group>
-              <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit">Sửa</el-button>
-              <el-button type="danger" size="small" icon="el-icon-delete" @click="alertDelete">Xóa</el-button>
-            </el-button-group>
-          </div>
-        </div>
+        <h2 style="text-align: left; padding-bottom: 10px;">{{ currentFarm.name }}</h2>
         <farm-description :farm="currentFarm"/>
+        <div style="margin-top: 28px">
+          <el-button-group>
+            <el-button type="primary" plain size="small" icon="el-icon-edit" @click="handleEdit">Sửa</el-button>
+            <el-button type="danger" plain size="small" icon="el-icon-delete" @click="alertDelete">Xóa</el-button>
+          </el-button-group>
+        </div>
       </el-card>
       <div class="detail-info">
-        <div class="chart-container">
-          <span class="title">Cấu trúc</span>
-          <pie-chart :key="pieChartKey" :data="farmStatistic" class="pie-chart"/>
-        </div>
         <div class="activity-container">
-          <drag-kanban/>
+          <el-row :gutter="15">
+            <el-col :span="14">
+              <el-row>
+                <drag-kanban :key="dragActivityKey" :farm="currentFarm" @ReRenderActivity="handleReRenderEvent"/>
+              </el-row>
+              <el-row style="margin-top: 20px">
+                <el-card class="chart-container">
+                  <h2 style="text-align: left; padding-bottom: 10px;"><i class="icon-before el-icon-setting"/> Cấu trúc
+                  </h2>
+                  <pie-chart :key="pieChartKey" :data="farmStatistic" class="pie-chart"/>
+                </el-card>
+              </el-row>
+            </el-col>
+            <el-col :span="10">
+              <activity :key="activityHistoryListKey" :farm="currentFarm"/>
+            </el-col>
+          </el-row>
         </div>
       </div>
       <el-dialog
@@ -58,7 +69,7 @@
                 <span style="line-height: 30px"> <i style="color: #c7c738" class="el-icon-info scale-icon"/> Thông tin vườn </span>
                 <div v-if="farmInfoFormHasChanged" style="float: right">
                   <el-button
-                    v-loading="buttonResetLoading"
+                    :loading="buttonResetLoading"
                     size="small"
                     style="color: #0e7450"
                     type="text"
@@ -68,7 +79,7 @@
                     Khôi phục
                   </el-button>
                   <el-button
-                    v-loading="buttonSaveLoading"
+                    :loading="buttonSaveLoading"
                     size="small"
                     type="text"
                     icon="el-icon-check"
@@ -106,23 +117,96 @@
                   </span>
                   </div>
                 </el-form-item>
-                <el-form-item label="Địa chỉ" prop="address.content">
-                  <el-input
-                    v-if="farmInfoForm.address.inputVisible"
-                    ref="farmAddress"
-                    v-model="farmInfoForm.address.content"
-                    @keyup.enter.native.prevent="farmInfoForm.address.inputVisible = false"
-                    @blur="farmInfoForm.address.inputVisible = false"
-                  />
+                <el-form-item prop="province" label="Cấp tỉnh">
+                  <el-autocomplete
+                    v-if="farmInfoForm.province.inputVisible"
+                    ref="farmProvince"
+                    v-model="farmInfoForm.province.name"
+                    class="el-autocomplete"
+                    placeholder="Cấp tỉnh"
+                    value-key="name"
+                    :fetch-suggestions="fetchProvinceSuggestions"
+                    @select="handleSelectProvince"/>
                   <div v-else>
-                    <span style="display: inline-block; line-height: 25px"> {{ farmInfoForm.address.content }} </span>
+                    <span style="display: inline-block; line-height: 25px"> {{ farmInfoForm.province.name }} </span>
                     <span>
                     <el-button
                       icon="el-icon-edit"
                       round
                       plain
                       style="border: none;"
-                      @click="showInput(farmInfoForm.address, 'farmAddress')"
+                      @click="showInput(farmInfoForm.province, 'farmProvince')"
+                    />
+                  </span>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="district" label="Cấp huyện">
+                  <el-autocomplete
+                    v-if="farmInfoForm.district.inputVisible"
+                    ref="farmDistrict"
+                    v-model="farmInfoForm.district.name"
+                    class="el-autocomplete"
+                    value-key="name"
+                    placeholder="Cấp huyện"
+                    :fetch-suggestions="fetchDistrictSuggestions"
+                    @focus="focusDistrict"
+                    @select="handleSelectDistrict"/>
+                  <div v-else>
+                    <span style="display: inline-block; line-height: 25px"> {{ farmInfoForm.district.name }} </span>
+                    <span>
+                    <el-button
+                      icon="el-icon-edit"
+                      round
+                      plain
+                      style="border: none;"
+                      @click="showInput(farmInfoForm.district, 'farmDistrict')"
+                    />
+                  </span>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="ward" label="Cấp xã">
+                  <el-autocomplete
+                    v-if="farmInfoForm.ward.inputVisible"
+                    ref="farmWard"
+                    v-model="farmInfoForm.ward.name"
+                    class="el-autocomplete"
+                    value-key="name"
+                    placeholder="Cấp xã"
+                    :fetch-suggestions="fetchWardSuggestions"
+                    @select="handleSelectWard"
+                    @focus="focusWard"/>
+                  <div v-else>
+                    <span style="display: inline-block; line-height: 25px"> {{ farmInfoForm.ward.name }} </span>
+                    <span>
+                    <el-button
+                      icon="el-icon-edit"
+                      round
+                      plain
+                      style="border: none;"
+                      @click="showInput(farmInfoForm.ward, 'farmWard')"
+                    />
+                  </span>
+                  </div>
+                </el-form-item>
+                <el-form-item label="Cụ thể" prop="detailAddress.content">
+                  <el-input
+                    v-if="farmInfoForm.detailAddress.inputVisible"
+                    ref="farmDetailAddress"
+                    v-model="farmInfoForm.detailAddress.content"
+                    @keyup.enter.native.prevent="farmInfoForm.detailAddress.inputVisible = false"
+                    @blur="farmInfoForm.detailAddress.inputVisible = false"
+                  />
+                  <div v-else>
+                    <span style="display: inline-block; line-height: 25px"> {{
+                        farmInfoForm.detailAddress.content
+                      }} </span>
+                    <span>
+                    <el-button
+                      icon="el-icon-edit"
+                      round
+                      plain
+                      style="border: none;"
+                      @click="showInput(farmInfoForm.detailAddress, 'farmDetailAddress')"
                     />
                   </span>
                   </div>
@@ -248,12 +332,18 @@
 
       </el-dialog>
     </div>
-    <div v-else style="clear: both">
-      <el-card>
-        <span>
-          Ban chua co vuon nao ca. hay bat dau dang ky vuon
-        </span>
-      </el-card>
+    <div v-else style="clear: both;">
+      <el-empty description="Bạn chưa đăng ký vườn nào cả">
+        <router-link to="/create-farm">
+          <el-button
+            style="float: right"
+            size="small"
+            type="success"
+            icon="el-icon-folder-add">
+            Thêm vườn
+          </el-button>
+        </router-link>
+      </el-empty>
     </div>
   </el-card>
 </template>
@@ -263,17 +353,21 @@ import PieChart from './components/pie-chart'
 import FarmDescription from './components/farm-description'
 import DragKanban from './components/drag-kanban'
 import {getAllFarms, searchTreesByName, updateFarm, updateFarmTrees} from '@/api/farm'
-import MDInput from '@/components/MDinput'
+import {searchDistricts, searchProvinces, searchWards} from "@/api/address";
+import Activity from "@/views/post-detail/components/activity";
 
 export default {
   name: 'Index',
-  components: {PieChart, FarmDescription, DragKanban, MDInput},
+  components: {PieChart, FarmDescription, DragKanban, Activity},
   data() {
     return {
       farms: [],
       currentFarm: {
         name: '',
-        address: '',
+        province: {},
+        district: {},
+        ward: {},
+        detailAddress: '',
         descriptions: {},
         trees: []
       },
@@ -281,15 +375,23 @@ export default {
       activeFarm: '0',
       loadingFarm: false,
       pieChartKey: 0,
+      activityHistoryListKey: 0,
+      dragActivityKey: 0,
       farmStructureKey: 0,
       farmInfoForm: {},
       formsHaveData: false,
       farmInfoFormRules: {
         'name.content': [
-          {required: true, message: 'Tên vườn không được trống !', trigger: 'blur'}
+          {required: true, message: 'Tên vườn không được trống !'}
         ],
-        'address.content': [
-          {required: true, message: 'Địa chỉ không được trống !', trigger: 'blur'}
+        province: [
+          {required: true, validator: this.checkProvince, trigger: 'change'}
+        ],
+        district: [
+          {required: true, validator: this.checkDistrict, trigger: 'change'}
+        ],
+        ward: [
+          {required: true, validator: this.checkWard, trigger: 'change'}
         ]
       },
       farmStructureForm: {},
@@ -312,8 +414,20 @@ export default {
         console.log('name is not equal: ' + this.currentFarm.name + ', ' + this.farmInfoForm.name.content)
         return true
       }
-      if (this.currentFarm.address !== this.farmInfoForm.address.content) {
-        console.log('address is not equal: ' + this.currentFarm.address + ', ' + this.farmInfoForm.address.content)
+      if (this.currentFarm.detailAddress !== this.farmInfoForm.detailAddress.content) {
+        console.log('detail address is not equal: ' + this.currentFarm.detailAddress + ', ' + this.farmInfoForm.detailAddress.content)
+        return true
+      }
+      if (this.currentFarm.province.id !== this.farmInfoForm.province.id) {
+        console.log('province is not equal: ' + this.currentFarm.province.id + ', ' + this.farmInfoForm.province.id)
+        return true
+      }
+      if (this.currentFarm.district.id !== this.farmInfoForm.district.id) {
+        console.log('district is not equal: ' + this.currentFarm.district.id + ', ' + this.farmInfoForm.district.id)
+        return true
+      }
+      if (this.currentFarm.ward.id !== this.farmInfoForm.ward.id) {
+        console.log('ward is not equal: ' + this.currentFarm.ward.id + ', ' + this.farmInfoForm.ward.id)
         return true
       }
       // check throw farm's descriptions
@@ -374,6 +488,7 @@ export default {
   methods: {
     async fetchFarms() {
       this.farms = await getAllFarms()
+      console.log('fetch farms successfully, ', this.farms)
       if (this.farms.length > 0) {
         if (this.farms.length <= this.activeFarm * 1) {
           this.activeFarm = '0'
@@ -424,9 +539,18 @@ export default {
       if (reRenderChart) {
         this.forceRenderPieChart()
       }
+      this.forceRenderActivityHistory()
+      this.forceRenderDragActivity()
     },
     forceRenderPieChart() {
       this.pieChartKey += 1
+    },
+    forceRenderActivityHistory() {
+      this.activityHistoryListKey += 1
+    },
+    forceRenderDragActivity() {
+      this.dragActivityKey += 1
+      console.log('forceRenderDragActivity')
     },
     handleEdit() {
       this.dialogVisible = false
@@ -453,8 +577,8 @@ export default {
         content: this.currentFarm.name,
         inputVisible: false
       }
-      const address = {
-        content: this.currentFarm.address,
+      const detailAddress = {
+        content: this.currentFarm.detailAddress,
         inputVisible: false
       }
       const descriptions = []
@@ -466,9 +590,27 @@ export default {
           inputLabelVisible: false
         })
       }
+      const province = {
+        name: this.currentFarm.province.name,
+        id: this.currentFarm.province.id,
+        inputVisible: false
+      }
+      const district = {
+        name: this.currentFarm.district.name,
+        id: this.currentFarm.district.id,
+        inputVisible: false
+      }
+      const ward = {
+        name: this.currentFarm.ward.name,
+        id: this.currentFarm.ward.id,
+        inputVisible: false
+      }
       return {
         name: name,
-        address: address,
+        detailAddress: detailAddress,
+        province: province,
+        district: district,
+        ward: ward,
         descriptions: descriptions
       }
     },
@@ -499,7 +641,11 @@ export default {
         if (valid) {
           this.buttonSaveLoading = true
           const name = this.farmInfoForm.name.content
-          const address = this.farmInfoForm.address.content
+          const detailAddress = this.farmInfoForm.detailAddress.content
+          const province = this.farmInfoForm.province
+          const district = this.farmInfoForm.district
+          const ward = this.farmInfoForm.ward
+
           const descriptions = this.farmInfoForm.descriptions.reduce((desc, curDesc) => {
             desc[curDesc.label] = curDesc.content
             return desc
@@ -507,8 +653,11 @@ export default {
           const newFarmInfo = {
             id: this.currentFarm.id,
             name: name,
-            address: address,
-            descriptions: descriptions
+            detailAddress: detailAddress,
+            descriptions: descriptions,
+            province: province,
+            district: district,
+            ward: ward
           }
           console.log(newFarmInfo)
           updateFarm(newFarmInfo).then(result => {
@@ -637,6 +786,86 @@ export default {
       } else {
         desc.inputLabelVisible = false
       }
+    },
+    fetchProvinceSuggestions(name, cb) {
+      searchProvinces(name)
+        .then(data => {
+          cb(data)
+        })
+    },
+    fetchDistrictSuggestions(name, cb) {
+      const provinceId = this.farmInfoForm.province.id
+      if (provinceId === undefined) {
+        return
+      }
+      searchDistricts(provinceId, name)
+        .then(data => {
+          cb(data)
+        })
+    },
+    fetchWardSuggestions(name, cb) {
+      const districtId = this.farmInfoForm.district.id
+      if (districtId === undefined) {
+        return
+      }
+      searchWards(districtId, name)
+        .then(data => {
+          cb(data)
+        })
+    },
+    handleSelectProvince(province) {
+      this.farmInfoForm.province = {...province, inputVisible: false}
+      console.log('select province, ', province)
+      this.farmInfoForm.district = {name: '', inputVisible: false}
+      this.farmInfoForm.ward = {name: '', inputVisible: false}
+    },
+    handleSelectDistrict(district) {
+      this.farmInfoForm.district = {...district, inputVisible: false}
+      console.log('select district, ', district)
+      this.farmInfoForm.ward = {name: '', inputVisible: false}
+    },
+    handleSelectWard(ward) {
+      this.farmInfoForm.ward = {...ward, inputVisible: false}
+      console.log('select ward, ', ward)
+    },
+    focusDistrict() {
+      if (this.farmInfoForm.province.id === undefined) {
+        this.$message.warning('Vui lòng chọn Tỉnh trước')
+        this.$refs['farmDistrict'].$refs.input.blur()
+      }
+    },
+    focusWard() {
+      if (this.farmInfoForm.province.id === undefined) {
+        this.$message.warning('Vui lòng chọn Tỉnh')
+        this.$refs['farmWard'].$refs.input.blur()
+      } else if (this.farmInfoForm.district.id === undefined) {
+        this.$message.warning('Vui lòng chọn Huyện')
+        this.$refs['farmWard'].$refs.input.blur()
+      }
+    },
+    checkProvince: function (rule, value, callback) {
+      if (value.id === undefined) {
+        callback(new Error('Tỉnh là thông tin bắt buộc'))
+      } else {
+        callback()
+      }
+    },
+    checkDistrict: function (rule, value, callback) {
+      if (value.id === undefined) {
+        callback(new Error('Huyện là thông tin bắt buộc'))
+      } else {
+        callback()
+      }
+    },
+    checkWard: function (rule, value, callback) {
+      if (value.id === undefined) {
+        callback(new Error('Xã là thông tin bắt buộc'))
+      } else {
+        callback()
+      }
+    },
+    handleReRenderEvent() {
+      this.forceRenderActivityHistory()
     }
   }
 }
@@ -648,18 +877,14 @@ export default {
 }
 
 .chart-container {
-  width: 450px;
-  padding: 20px;
-  float: right;
-  border: 1px solid #97a8be;
-  border-radius: 6px;
+  /*width: 450px;*/
+  /*padding: 20px;*/
+  /*float: right;*/
+  /*border: 1px solid #97a8be;*/
+  /*border-radius: 6px;*/
 }
 
 .activity-container {
-  width: 700px;
-  padding: 20px;
-  border: 1px solid #97a8be;
-  border-radius: 6px;
 }
 
 .title {
@@ -700,5 +925,9 @@ export default {
   font-size: 2em;
   position: relative;
   top: 0.2em;
+}
+
+.icon-before {
+  padding-right: 10px;
 }
 </style>

@@ -4,20 +4,20 @@
       <el-row :gutter="20">
 
         <el-col :span="6" :xs="24">
-          <user-card :user="user" @updateAvatar="updateAvatar"/>
+          <user-card :key="accountKey" :user="user" @updateAvatar="updateAvatar"/>
         </el-col>
 
         <el-col :span="18" :xs="24">
           <el-card>
             <el-tabs v-model="activeTab">
-              <el-tab-pane label="Activity" name="activity">
+              <el-tab-pane label="Hoạt động" name="activity">
                 <activity/>
               </el-tab-pane>
-              <el-tab-pane label="Timeline" name="timeline">
-                <timeline/>
-              </el-tab-pane>
-              <el-tab-pane label="Account" name="account">
-                <account :user="user" @saveUserInfo="updateUserInfo"/>
+<!--              <el-tab-pane label="Timeline" name="timeline">-->
+<!--                <timeline/>-->
+<!--              </el-tab-pane>-->
+              <el-tab-pane label="Tài khoản" name="account">
+                <account :key='accountKey' :user="user" @saveUserInfo="updateUserInfo"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -41,7 +41,8 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'activity'
+      activeTab: 'account',
+      accountKey: 0
     }
   },
   computed: {
@@ -54,16 +55,17 @@ export default {
     ])
   },
   created() {
-    this.getUser()
+    this.getUser(this)
+    console.log('created ', this.user)
   },
   methods: {
-    getUser() {
+    getUser(data) {
       this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        avatar: this.avatar,
-        email: this.email,
-        address: this.address
+        name: data.name,
+        role: data.roles.join(' | '),
+        avatar: data.avatar,
+        email: data.email,
+        address: data.address
       }
     },
     updateUserInfo(user) {
@@ -73,7 +75,6 @@ export default {
           type: 'success',
           duration: 5 * 1000
         })
-        console.log(data)
       }).catch(err => {
         this.$message({
           message: 'Cập nhật thông tin thất bại',
@@ -85,6 +86,9 @@ export default {
     },
     updateAvatar(avatar) {
       this.user.avatar = avatar
+    },
+    forceRenderAccountComponents() {
+      this.accountKey++
     }
   }
 }

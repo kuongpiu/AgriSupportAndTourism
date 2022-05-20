@@ -99,6 +99,10 @@ const actions = {
   updateUserInfo({commit}, user) {
     return new Promise((resolve, reject) => {
       updateInfo(user).then(data => {
+        const {name, address, email} = data
+        commit('SET_NAME', name)
+        commit('SET_ADDRESS', address)
+        commit('SET_EMAIL', email)
         resolve(data)
       }).catch(err => {
         reject(err)

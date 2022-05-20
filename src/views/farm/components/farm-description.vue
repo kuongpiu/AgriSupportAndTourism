@@ -2,7 +2,12 @@
   <el-descriptions :column="2" size="medium">
     <el-descriptions-item
       key="address"
-      label="Địa chỉ">{{ farm.address }}</el-descriptions-item>
+      label="Địa chỉ">{{ farm.ward.name }}, {{ farm.district.name }}, {{ farm.province.name }}
+    </el-descriptions-item>
+    <el-descriptions-item
+      key="detailAddress"
+      label="Cụ thể">{{ farm.detailAddress }}
+    </el-descriptions-item>
     <el-descriptions-item
       v-for="des in Object.keys(farm.descriptions)"
       :key="des"

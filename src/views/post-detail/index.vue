@@ -1,19 +1,28 @@
 <template>
-  <el-card class="box-card">
-    <el-row :gutter="20">
+  <el-card class="box-card" :body-style="{padding: '0px'}">
+    <el-row :gutter="5">
       <!--      <carousel class="carousel" :slides="post.imageUrls"/>-->
-      <el-carousel :interval="6000" type="card" height="350px">
+      <el-carousel :interval="6000" type="card" height="80vh">
         <el-carousel-item v-for="item in post.imageUrls" :key="item">
           <img :src="item" class="image">
         </el-carousel-item>
       </el-carousel>
-      <el-col :span="16">
-        <post-content :post="{title: post.title, body: post.body}"/>
-        <comment :post-id="this.$route.params.id"/>
-      </el-col>
-      <el-col :span="8">
-        <activity/>
-      </el-col>
+      <template v-if="post.farmId != null">
+        <el-col :span="16">
+          <post-content v-if="post.id != null" :post="post"/>
+          <comment :post-id="this.$route.params.id"/>
+        </el-col>
+        <el-col :span="8">
+          <activity :farm="{id: post.farmId}"/>
+        </el-col>
+      </template>
+      <template v-else>
+        <el-col :span="24">
+          <post-content v-if="post.id != null" :post="post"/>
+          <comment :post-id="this.$route.params.id"/>
+        </el-col>
+      </template>
+
     </el-row>
   </el-card>
 </template>
@@ -30,19 +39,15 @@ export default {
   components: {Carousel, Activity, PostContent, Comment},
   data() {
     return {
-      post: {
-        title: '',
-        address: '',
-        body: '',
-        imageUrls: ''
-      }
+      post: {}
     }
   },
-  created() {
+  mounted() {
     const postId = this.$route.params.id
     getPostDetail(postId)
       .then(data => {
         this.post = data
+        console.log(data)
       })
       .catch(err => {
         console.log(err)
@@ -55,5 +60,6 @@ export default {
 .image {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 </style>

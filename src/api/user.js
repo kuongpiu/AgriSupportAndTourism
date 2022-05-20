@@ -9,6 +9,14 @@ export function login(data) {
   })
 }
 
+export function signup(data) {
+  return request({
+    url: '/register',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo() {
   return request({
     url: '/user',

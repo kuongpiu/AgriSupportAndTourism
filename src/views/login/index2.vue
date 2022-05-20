@@ -37,6 +37,7 @@
 
 <script>
 import MdInput from '@/components/MDinput'
+import {signup} from "@/api/user";
 
 const MIN_USERNAME_LENGTH = 4
 const MIN_PASSWORD_LENGTH = 4
@@ -125,7 +126,16 @@ export default {
       })
     },
     signupViaForm: function () {
-      console.log('signup via form')
+      console.log('signup via form: ', this.loginForm)
+      signup(this.loginForm)
+        .then(data => {
+          this.$message.success('Đăng ký thành công')
+          console.log(data)
+        })
+        .catch(err => {
+          this.$message.error('Đăng ký thất bại, vui lòng thử lại sau')
+          console.log(err)
+        })
     }
   }
 }

@@ -36,23 +36,10 @@ export const constantRoutes = [
     component: () => import('@/views/login/index2'),
     hidden: true
   },
-
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
-  },
-
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: {title: 'Dashboard', icon: 'dashboard'}
-    }]
   },
   {
     path: '/profile',
@@ -67,23 +54,45 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/farm',
+    path: '/',
     component: Layout,
-    redirect: '/farm/index',
+    redirect: '/post/index',
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/farm/index'),
-        name: 'Quản lý vườn',
-        meta: {title: 'Quản lý vườn', icon: 'tree'}
+        path: '/post/index',
+        component: () => import('@/views/post/index'),
+        name: 'Loạt bài',
+        meta: {title: 'Loạt bài', icon: 'table'}
+      },
+      {
+        path: '/post/detail/:id',
+        component: () => import('@/views/post-detail/index'),
+        name: 'Chi tiết',
+        hidden: true,
+        meta: {title: 'Chi tiết'}
       }
     ]
+  }
+]
+export const asyncRoutes = [
+  {
+    path: '/dashboard',
+    component: Layout,
+    redirect: '/dashboard/index',
+    meta: {roles: ['admin']},
+    children: [{
+      path: 'index',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {title: 'Dashboard', icon: 'dashboard'}
+    }]
   },
   {
     path: '/create-farm',
     component: Layout,
     redirect: 'create-farm/index',
     hidden: true,
+    meta: {roles: ['farmer']},
     children: [
       {
         path: 'index',
@@ -94,29 +103,10 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/post',
-    component: Layout,
-    redirect: '/post/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/post/index'),
-        name: 'Loạt bài',
-        meta: {title: 'Loạt bài', icon: 'table'}
-      },
-      {
-        path: 'detail/:id',
-        component: () => import('@/views/post-detail/index'),
-        name: 'Chi tiết',
-        hidden: true,
-        meta: {title: 'Chi tiết'}
-      }
-    ]
-  },
-  {
     path: '/create-post',
     redirect: '/create-post/index',
     component: Layout,
+    meta: {roles: ['farmer']},
     children: [
       {
         path: 'index',
@@ -126,41 +116,20 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
-    path: '/example',
+    path: '/farm',
     component: Layout,
-    name: 'Example',
-    meta: {title: 'Example', icon: 'el-icon-s-help'},
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: {title: 'Tree', icon: 'tree'}
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
+    redirect: '/farm/index',
+    meta: {roles: ['farmer']},
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: {title: 'Form', icon: 'form'}
+        component: () => import('@/views/farm/index'),
+        name: 'Quản lý vườn',
+        meta: {title: 'Quản lý vườn', icon: 'tree'}
       }
     ]
   },
-  // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
 ]
 

@@ -70,7 +70,7 @@ export default {
 <style lang="scss" scoped>
 
 .box-card {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .icon-before {

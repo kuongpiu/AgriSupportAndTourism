@@ -7,6 +7,15 @@ export function getAllFarms() {
     method: 'get'
   })
 }
+
+export function createFarm(data) {
+  return request({
+    url: '/farm',
+    method: 'post',
+    data
+  })
+}
+
 export function updateFarm(data) {
   return request({
     url: '/farm',
@@ -14,6 +23,7 @@ export function updateFarm(data) {
     data
   })
 }
+
 export function updateFarmTrees(data) {
   return request({
     url: '/farm/tree',
@@ -21,7 +31,8 @@ export function updateFarmTrees(data) {
     data
   })
 }
-export function searchTreesByName(treeName){
+
+export function searchTreesByName(treeName) {
   return request({
     url: '/tree/search',
     method: 'get',
