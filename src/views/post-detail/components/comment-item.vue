@@ -6,7 +6,7 @@
       <span class="created-time text-muted">{{ comment.createdTime }}</span>
     </div>
     <div v-if="comment.imageUrls.length > 0" class="images-container">
-      <el-carousel :interval="6000" type="card" height="220px">
+      <el-carousel height="300px">
         <el-carousel-item v-for="item in comment.imageUrls" :key="item">
           <img :src="item" class="image">
         </el-carousel-item>

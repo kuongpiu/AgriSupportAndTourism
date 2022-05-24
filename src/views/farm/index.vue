@@ -1,56 +1,61 @@
 <template>
   <el-card style="padding-bottom: 100px">
     <div v-if="hasFarm">
-      <router-link to="/create-farm">
-        <el-button
-          style="float: right"
-          size="small"
-          type="success"
-          plain
-          icon="el-icon-folder-add">
-          Thêm
-        </el-button>
-      </router-link>
       <div style="clear: both">
-        <el-tabs v-model="activeFarm" class="el-tabs">
+        <el-tabs v-model="activeFarm" type="border-card" class="el-tabs">
           <el-tab-pane
             v-for="(farm, index) in farms"
             :key="farm.id"
             :label="'Vườn thứ ' +(index + 1)"
             :name="index.toString()"
-          />
+          >
+            <div>
+              <h2 style="text-align: left; padding-bottom: 10px;">{{ currentFarm.name }}</h2>
+              <farm-description :farm="currentFarm"/>
+              <div style="margin-top: 28px; float: right">
+                <el-button-group>
+                  <el-button type="primary" plain size="small" icon="el-icon-edit" @click="handleEdit">Sửa</el-button>
+                  <el-button type="danger" plain size="small" icon="el-icon-delete" @click="alertDelete">Xóa</el-button>
+                </el-button-group>
+              </div>
+              <div class="detail-info">
+                <el-tabs v-model="activeTab">
+                  <el-tab-pane name="structure-tab">
+                    <span slot="label"><i class="el-icon-setting"></i> Cấu trúc</span>
+                    <div class="chart-container">
+                      <el-col :span="12">
+                        <el-card>
+                          <h2 style="text-align: left; padding-bottom: 10px;"><i class="icon-before el-icon-setting"/>
+                            Các loại cây
+                          </h2>
+                          <pie-chart :key="pieChartKey" :data="farmStatistic" class="pie-chart"/>
+                        </el-card>
+                      </el-col>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane name="activity-tab">
+                    <span slot="label"><i class="el-icon-news"></i> Hoạt động</span>
+                    <div class="activity-container">
+                      <el-row :gutter="5">
+                        <el-col :span="14">
+                          <drag-kanban :key="dragActivityKey" :farm="currentFarm"
+                                       @ReRenderActivity="handleReRenderEvent"/>
+                        </el-col>
+                        <el-col :span="10">
+                          <activity :key="activityHistoryListKey" :farm="currentFarm"/>
+                        </el-col>
+                      </el-row>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane name="product-tab">
+                    <span slot="label"><i class="el-icon-box"></i> Sản phẩm</span>
+                    <farm-product :key="currentFarm.id" :farm-id="currentFarm.id"/>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </div>
+          </el-tab-pane>
         </el-tabs>
-      </div>
-      <el-card>
-        <h2 style="text-align: left; padding-bottom: 10px;">{{ currentFarm.name }}</h2>
-        <farm-description :farm="currentFarm"/>
-        <div style="margin-top: 28px">
-          <el-button-group>
-            <el-button type="primary" plain size="small" icon="el-icon-edit" @click="handleEdit">Sửa</el-button>
-            <el-button type="danger" plain size="small" icon="el-icon-delete" @click="alertDelete">Xóa</el-button>
-          </el-button-group>
-        </div>
-      </el-card>
-      <div class="detail-info">
-        <div class="activity-container">
-          <el-row :gutter="15">
-            <el-col :span="14">
-              <el-row>
-                <drag-kanban :key="dragActivityKey" :farm="currentFarm" @ReRenderActivity="handleReRenderEvent"/>
-              </el-row>
-              <el-row style="margin-top: 20px">
-                <el-card class="chart-container">
-                  <h2 style="text-align: left; padding-bottom: 10px;"><i class="icon-before el-icon-setting"/> Cấu trúc
-                  </h2>
-                  <pie-chart :key="pieChartKey" :data="farmStatistic" class="pie-chart"/>
-                </el-card>
-              </el-row>
-            </el-col>
-            <el-col :span="10">
-              <activity :key="activityHistoryListKey" :farm="currentFarm"/>
-            </el-col>
-          </el-row>
-        </div>
       </div>
       <el-dialog
         v-if="formsHaveData"
@@ -59,7 +64,7 @@
         :fullscreen="false"
         :width="'80%'"
         :center="true"
-        :top="'5vh'"
+        :top="'2vh'"
         :close-on-click-modal="false"
       >
         <el-row :gutter="30">
@@ -355,10 +360,11 @@ import DragKanban from './components/drag-kanban'
 import {getAllFarms, searchTreesByName, updateFarm, updateFarmTrees} from '@/api/farm'
 import {searchDistricts, searchProvinces, searchWards} from "@/api/address";
 import Activity from "@/views/post-detail/components/activity";
+import FarmProduct from './components/farm-product'
 
 export default {
   name: 'Index',
-  components: {PieChart, FarmDescription, DragKanban, Activity},
+  components: {PieChart, FarmDescription, DragKanban, Activity, FarmProduct},
   data() {
     return {
       farms: [],
@@ -401,7 +407,9 @@ export default {
       buttonResetLoading: false,
       buttonSaveLoading: false,
       loadingInfoFarm: false,
-      loadingStatistic: false
+      loadingStatistic: false,
+      dialogCreateProductVisible: false,
+      activeTab: 'structure-tab'
     }
   },
   computed: {
@@ -550,7 +558,6 @@ export default {
     },
     forceRenderDragActivity() {
       this.dragActivityKey += 1
-      console.log('forceRenderDragActivity')
     },
     handleEdit() {
       this.dialogVisible = false
@@ -874,6 +881,7 @@ export default {
 <style scoped>
 .detail-info {
   margin-top: 20px;
+  clear: both;
 }
 
 .chart-container {
@@ -930,4 +938,5 @@ export default {
 .icon-before {
   padding-right: 10px;
 }
+
 </style>

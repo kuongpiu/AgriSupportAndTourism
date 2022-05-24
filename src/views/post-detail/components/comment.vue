@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div class="user-comment">
-      <h2 style="padding-bottom: 10px; float: left"><i class="icon-before el-icon-edit-outline"></i>Bình luận</h2>
+      <h3 style="padding-bottom: 10px; float: left"><i class="icon-before el-icon-edit-outline"></i>Bình luận</h3>
       <create-comment :post-id="postId" @refreshComments="fetchComments" style="clear: both; margin-top: 20px"/>
       <comment-item
         v-for="(comment, index) in comments"

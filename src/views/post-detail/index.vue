@@ -8,11 +8,12 @@
         </el-carousel-item>
       </el-carousel>
       <template v-if="post.farmId != null">
-        <el-col :span="16">
+        <el-col :span="18">
           <post-content v-if="post.id != null" :post="post"/>
+          <products :farm-id="post.farmId"/>
           <comment :post-id="this.$route.params.id"/>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <activity :farm="{id: post.farmId}"/>
         </el-col>
       </template>
@@ -33,10 +34,11 @@ import Activity from '@/views/post-detail/components/activity'
 import PostContent from '@/views/post-detail/components/post-content'
 import Comment from '@/views/post-detail/components/comment'
 import {getPostDetail} from "@/api/post"
+import Products from './components/products'
 
 export default {
   name: 'Index',
-  components: {Carousel, Activity, PostContent, Comment},
+  components: {Carousel, Activity, PostContent, Comment, Products},
   data() {
     return {
       post: {}

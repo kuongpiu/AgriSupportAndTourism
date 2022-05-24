@@ -26,7 +26,7 @@
         :fullscreen="false"
         :width="'80%'"
         :center="true"
-        :top="'5vh'"
+        :top="'2vh'"
         :close-on-click-modal="false"
       >
         <div
@@ -313,7 +313,6 @@ export default {
     fetchActivity() {
       getAllActivities()
         .then(data => {
-          console.log('result activities, ', data)
           this.todoActivities = data
         })
         .catch(err => {
@@ -570,7 +569,6 @@ export default {
       }
       searchFarmCaresByDate(this.farm.id, this.inputDate)
         .then(data => {
-          console.log('search farm cares by date result: ', data)
           this.farmCareList = data
           this.finishedActivities = data.map(farmCare => {
             return {

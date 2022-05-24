@@ -1,6 +1,6 @@
 <template>
   <el-card v-show="farm.id != null" class="box-card">
-    <h2 style="float: left; padding-bottom: 10px;"><i class="icon-before el-icon-news"></i>Hoạt động gần đây</h2>
+    <h3 style="float: left; padding-bottom: 10px;"><i class="icon-before el-icon-news"></i>Hoạt động gần đây</h3>
     <el-timeline style="clear: both">
       <el-timeline-item v-for="(item,index) of farmCareHistoryList" :key="index"
                         :timestamp="item.farmCareHistoryDTO.careDate" placement="top">
@@ -92,7 +92,6 @@ export default {
       }
       getAllFarmCares(this.farm.id)
         .then(data => {
-          console.log('load farm care history successfully, ', data)
           this.farmCareHistoryList = data
         })
         .catch(err => {

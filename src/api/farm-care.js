@@ -28,7 +28,7 @@ export function getAllFarmCares(farmId) {
 }
 
 export function searchFarmCaresByDate(farmId, date) {
-  console.log('query farm cares has farmId: ', farmId, ' at ', date)
+  // console.log('query farm cares has farmId: ', farmId, ' at ', date)
   return request({
     url: '/farm-care-history/search-by-date',
     method: 'get',

@@ -1,6 +1,9 @@
 import request from "@/utils/request";
 
 export function searchProvinces(name) {
+  if (name === undefined || name == null) {
+    name = ''
+  }
   return request({
     url: '/address/province',
     method: 'get',
