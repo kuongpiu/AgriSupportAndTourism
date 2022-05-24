@@ -1,29 +1,23 @@
 <template>
   <el-card class="box-card" :body-style="{padding: '0px'}">
     <el-row :gutter="5">
-      <!--      <carousel class="carousel" :slides="post.imageUrls"/>-->
       <el-carousel :interval="6000" type="card" height="80vh">
         <el-carousel-item v-for="item in post.imageUrls" :key="item">
           <img :src="item" class="image">
         </el-carousel-item>
       </el-carousel>
-      <template v-if="post.farmId != null">
-        <el-col :span="18">
-          <post-content v-if="post.id != null" :post="post"/>
-          <products :farm-id="post.farmId"/>
-          <comment :post-id="this.$route.params.id"/>
-        </el-col>
-        <el-col :span="6">
-          <activity :farm="{id: post.farmId}"/>
-        </el-col>
-      </template>
-      <template v-else>
-        <el-col :span="24">
-          <post-content v-if="post.id != null" :post="post"/>
-          <comment :post-id="this.$route.params.id"/>
-        </el-col>
-      </template>
-
+      <el-col :span="postContentSpan">
+        <post-content
+          v-if="post.id != null"
+          :post="post"
+          @OpenActivityHistoryTab="handleOpenActivityHistoryTab"
+          @CloseActivityHistoryTab="handleCloseActivityHistoryTab"/>
+        <products v-if="post.farmId != null" :farm-id="post.farmId"/>
+        <comment :post-id="this.$route.params.id"/>
+      </el-col>
+      <el-col v-if="post.farmId != null" :span="24 - postContentSpan">
+        <activity :farm="{id: post.farmId}"/>
+      </el-col>
     </el-row>
   </el-card>
 </template>
@@ -41,7 +35,21 @@ export default {
   components: {Carousel, Activity, PostContent, Comment, Products},
   data() {
     return {
-      post: {}
+      post: {},
+      isActivityHistoryTabOpened: false
+    }
+  },
+  computed: {
+    postContentSpan() {
+      if (this.post.farmId == null) {
+        return 24
+      } else {
+        if (this.isActivityHistoryTabOpened) {
+          return 18
+        } else {
+          return 24
+        }
+      }
     }
   },
   mounted() {
@@ -54,6 +62,14 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  methods: {
+    handleOpenActivityHistoryTab() {
+      this.isActivityHistoryTabOpened = true
+    },
+    handleCloseActivityHistoryTab() {
+      this.isActivityHistoryTabOpened = false
+    }
   }
 }
 </script>

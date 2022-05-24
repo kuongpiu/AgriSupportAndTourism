@@ -30,7 +30,7 @@
       :visible.sync="dialogVisible"
       :fullscreen="false"
       :width="'60%'"
-      :modal="false"
+      :top="'6vh'"
       :center="true">
       <div>
         <el-row :gutter="20">
@@ -45,9 +45,41 @@
           </el-col>
           <el-col :span="11">
             <div class="product-info-container">
-              <h2 style="word-break: break-word">{{ currentProduct.name }}</h2>
+              <h2 style="word-break: break-word; font-weight: 500; color: #1378ee">{{ currentProduct.name }}</h2>
+              <span style="color: #ff0404; font-size: x-large">{{ convertPriceToVND(currentProduct.price) }}</span>
+              <div style="margin-top: 20px">
+                <el-row :gutter="80">
+                  <el-col :span="10">
+                    <el-row>
+                      <span>Số lượng</span>
+                    </el-row>
+                    <el-row style="margin-top: 7px">
+                      <el-input-number v-model="productNumber" min="1" size="mini"/>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="14">
+                    <br/>
+                    <el-button type="success" icon="el-icon-shopping-cart-full">
+                      Thêm vào giỏ
+                    </el-button>
+                  </el-col>
+                </el-row>
+              </div>
+              <div style="margin-top: 30px">
+                <h3 style="font-weight: 600; color: #0e7450"><i class="el-icon-magic-stick"/> Cam kết</h3>
+                <ul>
+                  <li>Chất lượng tốt</li>
+                  <li>Sản phẩm nguồn gốc rõ ràng</li>
+                </ul>
+              </div>
             </div>
           </el-col>
+        </el-row>
+        <el-row>
+          <div style="margin-top: 50px">
+            <h3 style="font-weight: 600; color: #3a7ed3"><i class="el-icon-tickets"/> Thông tin sản phẩm</h3>
+            <p style="word-break: break-word; line-height: 23px; color: black">{{currentProduct.description}}</p>
+          </div>
         </el-row>
       </div>
     </el-dialog>
@@ -55,7 +87,7 @@
 </template>
 
 <script>
-import { getAllProductsInPage, getProductById} from "@/api/product";
+import {getAllProductsInPage, getProductById} from "@/api/product";
 import {convertPriceToVND} from "@/utils/price";
 import ProductItem from '@/views/farm/components/product-item'
 
@@ -73,7 +105,9 @@ export default {
       currentPage: 1,
       total: 0,
       dialogVisible: false,
-      currentProduct: {}
+      currentProduct: {},
+      convertPriceToVND,
+      productNumber: 1
     }
   },
   mounted() {
@@ -112,10 +146,12 @@ export default {
 .icon-before {
   padding-right: 10px;
 }
-.product-info-container{
+
+.product-info-container {
   word-break: break-word;
   line-height: 25px;
 }
+
 .image {
   width: 100%;
   height: 100%;

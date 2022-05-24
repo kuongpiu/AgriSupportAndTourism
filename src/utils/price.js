@@ -1,4 +1,5 @@
 export function convertPriceToVND(price) {
+  if(price === undefined || price === null) return ''
   const priceIcon = '₫'
   const clusterSize = 3
   price = price.toString()
