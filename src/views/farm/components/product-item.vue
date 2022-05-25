@@ -9,11 +9,11 @@
           :src="product.mainImage"
           class="image"
           alt="image"/>
-        <div class="tag-container">
-          <el-tag class="tag" effect="dark" size="small" type="success">Trồng mới</el-tag>
-          <el-tag class="tag" effect="dark" size="small" type="warning">Thu hoạch</el-tag>
-          <el-tag class="tag" effect="dark" size="small" type="danger">Chăm sóc</el-tag>
-        </div>
+<!--        <div class="tag-container">-->
+<!--          <el-tag class="tag" effect="dark" size="small" type="success">Trồng mới</el-tag>-->
+<!--          <el-tag class="tag" effect="dark" size="small" type="warning">Thu hoạch</el-tag>-->
+<!--          <el-tag class="tag" effect="dark" size="small" type="danger">Chăm sóc</el-tag>-->
+<!--        </div>-->
       </div>
       <div class="product-info">
         <span class="center-text title change-size">{{ product.name }}</span>

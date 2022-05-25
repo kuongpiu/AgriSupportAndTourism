@@ -68,7 +68,15 @@
                 <el-input v-model="productForm.name"/>
               </el-form-item>
               <el-form-item prop="status" label="Trạng thái">
-                <el-input v-model="productForm.status"/>
+                <br/>
+                <el-select v-model="productForm.status" style="display: inline-block" clearable placeholder="Trạng thái">
+                  <el-option
+                    v-for="status in statusOptions"
+                    :key="status"
+                    :label="status"
+                    :value="status">
+                  </el-option>
+                </el-select>
               </el-form-item>
               <el-form-item prop="price" label="Giá bán">
                 <el-input v-model="productForm.price"/>
@@ -130,6 +138,7 @@ import ImageCropper from '@/components/ImageCropper'
 import {searchProvinces} from "@/api/address";
 import {deleteProduct, getAllProducts, getProductById, insertProduct, updateProduct} from "@/api/product";
 
+const STATUS_OPTIONS = ['Còn hàng', 'Hết hàng', 'Sắp có']
 export default {
   name: 'FarmProduct',
   components: {ProductItem, ImageCropper},
@@ -166,7 +175,8 @@ export default {
           {required: true, validator: this.validatePrice, trigger: 'blur'}
         ],
         description: []
-      }
+      },
+      statusOptions: STATUS_OPTIONS
     }
   },
   mounted() {

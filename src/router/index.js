@@ -91,14 +91,12 @@ export const asyncRoutes = [
     path: '/create-farm',
     component: Layout,
     redirect: 'create-farm/index',
-    hidden: true,
-    meta: {roles: ['farmer']},
     children: [
       {
         path: 'index',
         component: () => import('@/views/create-farm/index'),
         name: 'Đăng ký vườn mới',
-        meta: {title: 'Đăng ký vườn mới'}
+        meta: {title: 'Đăng ký vườn mới', icon: 'el-icon-edit'}
       }
     ]
   },
