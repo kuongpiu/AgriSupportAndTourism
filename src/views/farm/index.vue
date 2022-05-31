@@ -25,9 +25,9 @@
                     <div class="chart-container">
                       <el-col :span="12">
                         <el-card>
-                          <h2 style="text-align: left; padding-bottom: 10px;"><i class="icon-before el-icon-setting"/>
+                          <h3 style="text-align: left; padding-bottom: 10px;"><i class="icon-before el-icon-setting"/>
                             Các loại cây
-                          </h2>
+                          </h3>
                           <pie-chart :key="pieChartKey" :data="farmStatistic" class="pie-chart"/>
                         </el-card>
                       </el-col>
@@ -37,11 +37,11 @@
                     <span slot="label"><i class="el-icon-news"></i> Hoạt động</span>
                     <div class="activity-container">
                       <el-row :gutter="5">
-                        <el-col :span="14">
+                        <el-col :span="15">
                           <drag-kanban :key="dragActivityKey" :farm="currentFarm"
                                        @ReRenderActivity="handleReRenderEvent"/>
                         </el-col>
-                        <el-col :span="10">
+                        <el-col :span="9">
                           <activity :key="activityHistoryListKey" :farm="currentFarm"/>
                         </el-col>
                       </el-row>
@@ -50,6 +50,13 @@
                   <el-tab-pane name="product-tab">
                     <span slot="label"><i class="el-icon-box"></i> Sản phẩm</span>
                     <farm-product :key="currentFarm.id" :farm-id="currentFarm.id"/>
+                  </el-tab-pane>
+                  <el-tab-pane name="orders-tab">
+                    <span slot="label">
+                      <i class="el-icon-box"></i> Đơn hàng
+                    <el-badge type="primary" :is-dot="hasNewOrder" class="item"/>
+                    </span>
+                    <orders :key="currentFarm.id" :farm-id="currentFarm.id"/>
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -360,11 +367,12 @@ import DragKanban from './components/drag-kanban'
 import {getAllFarms, searchTreesByName, updateFarm, updateFarmTrees} from '@/api/farm'
 import {searchDistricts, searchProvinces, searchWards} from "@/api/address";
 import Activity from "@/views/post-detail/components/activity";
+import Orders from './components/orders'
 import FarmProduct from './components/farm-product'
 
 export default {
   name: 'Index',
-  components: {PieChart, FarmDescription, DragKanban, Activity, FarmProduct},
+  components: {PieChart, FarmDescription, DragKanban, Activity, FarmProduct, Orders},
   data() {
     return {
       farms: [],
@@ -409,7 +417,8 @@ export default {
       loadingInfoFarm: false,
       loadingStatistic: false,
       dialogCreateProductVisible: false,
-      activeTab: 'structure-tab'
+      activeTab: 'structure-tab',
+      hasNewOrder: true
     }
   },
   computed: {
@@ -880,7 +889,7 @@ export default {
 
 <style scoped>
 .detail-info {
-  margin-top: 20px;
+  margin-top: 10px;
   clear: both;
 }
 

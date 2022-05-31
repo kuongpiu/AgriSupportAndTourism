@@ -6,9 +6,6 @@
     <el-form-item label="Email">
       <el-input v-model.trim="user.email"/>
     </el-form-item>
-    <el-form-item label="Địa chỉ">
-      <el-input v-model="user.address"/>
-    </el-form-item>
     <el-form-item>
       <el-button :loading="buttonUpdateLoading" type="primary" @click="submit">Cập nhật</el-button>
     </el-form-item>
@@ -23,8 +20,7 @@ export default {
       default: () => {
         return {
           name: '',
-          email: '',
-          address: ''
+          email: ''
         }
       }
     }

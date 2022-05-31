@@ -21,12 +21,21 @@
               Trang cá nhân
             </el-dropdown-item>
           </router-link>
+          <router-link to="/order">
+            <el-dropdown-item>
+              Đơn hàng
+            </el-dropdown-item>
+          </router-link>
+          <el-dropdown-item divided @click.native="showCart">
+            <span>Giỏ hàng</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">Đăng xuất</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <cart/>
   </div>
 </template>
 
@@ -34,11 +43,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Cart from '@/views/cart/index'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Cart
   },
   computed: {
     ...mapGetters([
@@ -53,6 +64,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    showCart() {
+      this.$store.dispatch('cart/showCart')
     }
   }
 }

@@ -50,8 +50,12 @@ export default {
 <style lang="scss" scoped>
 .box-card {
   .body {
+    word-break: break-word;
     clear: both;
     line-height: 25px;
+  }
+  .img {
+    width: 100px;
   }
 
   .icon-before {

@@ -72,6 +72,40 @@ export const constantRoutes = [
         meta: {title: 'Chi tiết'}
       }
     ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'Đơn hàng',
+        component: () => import('@/views/order/index'),
+        meta: {title: 'Đơn hàng'}
+      }
+    ]
+  },
+  {
+    path: '/confirm-order-information',
+    component: Layout,
+    redirect: '/confirm-order-information/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'Xác nhận thông tin',
+        component: () => import('@/views/confirm-order-information/index'),
+        meta: {title: 'Xác nhận thông tin'}
+      },
+      {
+        path: 'result/:code',
+        name: 'Kết quả thanh toán',
+        component: () => import('@/views/confirm-order-information/components/payment-result'),
+        meta: {title: 'Kết quả thanh toán'}
+      }
+    ]
   }
 ]
 export const asyncRoutes = [

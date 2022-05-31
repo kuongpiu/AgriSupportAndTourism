@@ -152,6 +152,8 @@
 <script>
 import {createFarm} from "@/api/farm";
 import {searchDistricts, searchProvinces, searchWards} from "@/api/address";
+import {mapGetters} from "vuex";
+import {resetRouter} from "@/router";
 
 export default {
   name: 'Index',
@@ -195,6 +197,9 @@ export default {
       buttonNextStepLoading: false
     }
   },
+  computed: {
+    ...mapGetters(['roles'])
+  },
   methods: {
     handleNextStep() {
       if (this.currentActiveStep < 2) {
@@ -206,6 +211,9 @@ export default {
                 .then(data => {
                   this.currentActiveStep++
                   console.log('created farm, ', data)
+                  if (!this.roles.includes('farmer')) {
+                    this.$store.dispatch('user/changeRoles')
+                  }
                 })
                 .catch(err => {
                   this.$message.error('Đăng ký vườn không thành công, vui lòng thử lại sau')

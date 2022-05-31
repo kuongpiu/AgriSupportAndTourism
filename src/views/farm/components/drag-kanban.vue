@@ -1,10 +1,10 @@
 <template>
   <el-card>
     <div style="padding-bottom: 10px; display: flex; justify-content: space-between">
-      <h2>
+      <h3>
         <i class="icon-before el-icon-edit-outline"/>
         Quản lý hoạt động
-      </h2>
+      </h3>
       <div style="display: flex; align-items: center">
         <el-date-picker
           ref="datePicker"
@@ -91,7 +91,7 @@
                     clearable
                     :autosize="{maxRows: 3, minRows: 1}"
                     type="textarea"
-                    placeholder="Tình trạng của cây"
+                    placeholder="Mô tả"
                   />
                 </div>
               </el-col>

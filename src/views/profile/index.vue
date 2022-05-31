@@ -19,6 +19,9 @@
               <el-tab-pane label="Tài khoản" name="account">
                 <account :key='accountKey' :user="user" @saveUserInfo="updateUserInfo"/>
               </el-tab-pane>
+              <el-tab-pane label="Sổ địa chỉ" name="address">
+                <addresses />
+              </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
@@ -32,16 +35,16 @@
 import {mapGetters} from 'vuex'
 import UserCard from './components/UserCard'
 import Activity from './components/Activity'
-import Timeline from './components/Timeline'
 import Account from './components/Account'
+import Addresses from '@/views/address/index'
 
 export default {
   name: 'Profile',
-  components: {UserCard, Activity, Timeline, Account},
+  components: {UserCard, Activity, Account, Addresses},
   data() {
     return {
       user: {},
-      activeTab: 'account',
+      activeTab: 'address',
       accountKey: 0
     }
   },
@@ -50,7 +53,6 @@ export default {
       'name',
       'avatar',
       'roles',
-      'address',
       'email'
     ])
   },
@@ -64,8 +66,7 @@ export default {
         name: data.name,
         role: data.roles.join(' | '),
         avatar: data.avatar,
-        email: data.email,
-        address: data.address
+        email: data.email
       }
     },
     updateUserInfo(user) {

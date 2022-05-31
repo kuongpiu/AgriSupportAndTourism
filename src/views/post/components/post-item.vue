@@ -23,7 +23,6 @@
             <el-avatar size="small" :src="post.avatar" fit="cover"></el-avatar>
             <div class="name">
               <span>{{ post.createdName }}</span>
-              <!--              <i class="el-icon-check"></i>-->
             </div>
           </div>
           <div class="post-bottom">

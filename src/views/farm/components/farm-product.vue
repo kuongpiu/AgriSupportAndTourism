@@ -1,9 +1,9 @@
 <template>
   <el-card>
     <div slot="header">
-      <h2 style="text-align: left; display: inline-block"><i class="icon-before el-icon-box"/>
-        Danh sách sản phẩm
-      </h2>
+      <h3 style="text-align: left; display: inline-block"><i class="icon-before el-icon-box"/>
+        Kho sản phẩm
+      </h3>
       <span style="float: right">
         <el-button type="success" icon="el-icon-plus" @click="handleOpenDialogCreateProduct">Thêm sản phẩm</el-button>
       </span>
@@ -186,7 +186,6 @@ export default {
     fetchProducts() {
       getAllProducts(this.farmId)
         .then(data => {
-          console.log('load product of farm: ', this.farmId, data)
           this.products = data
         })
         .catch(err => {
@@ -417,7 +416,6 @@ export default {
       this.dialogTitle = ''
       this.dialogVisible = false
       this.fileList = []
-      this.loadProductInfoToForm(null)
     },
     fetchProvinceSuggestions(name, cb) {
       searchProvinces(name)

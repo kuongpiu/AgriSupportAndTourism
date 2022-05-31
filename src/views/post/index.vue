@@ -29,7 +29,7 @@
 import PostItem from '@/views/post/components/post-item'
 import {getAllPost, getAllPostInPage} from '@/api/post'
 
-const PAGE_SIZE = 4
+const PAGE_SIZE = 8
 const PAGER_COUNT = 5
 export default {
   name: 'Index',

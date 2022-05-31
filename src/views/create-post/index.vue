@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-    <div v-show="!dialogVisible" style="position: fixed; right: 20px; top: 45px; z-index: 10000;">
+    <div v-show="!dialogVisible" style="position: fixed; right: 20px; top: 45px; z-index: 1;">
       <el-button-group>
         <el-button
           round
@@ -52,7 +52,7 @@
         <span slot="header">Địa chỉ</span>
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-form-item prop="province" label="Cấp tỉnh" tabindex="2">
+            <el-form-item prop="province" label="Tỉnh" tabindex="2">
               <el-autocomplete
                 ref="inputProvince"
                 v-model="post.province.name"
@@ -64,7 +64,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item prop="district" label="Cấp huyện" tabindex="3">
+            <el-form-item prop="district" label="Huyện" tabindex="3">
               <el-autocomplete
                 ref="inputDistrict"
                 v-model="post.district.name"
@@ -77,7 +77,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item prop="ward" label="Cấp xã" tabindex="4">
+            <el-form-item prop="ward" label="Xã" tabindex="4">
               <el-autocomplete
                 ref="inputWard"
                 v-model="post.ward.name"

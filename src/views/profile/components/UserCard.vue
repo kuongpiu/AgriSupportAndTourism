@@ -30,12 +30,12 @@
       </div>
 
       <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><span>Địa chỉ</span></div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            {{ this.user.address }}
-          </div>
-        </div>
+<!--        <div class="user-bio-section-header"><span>Địa chỉ</span></div>-->
+<!--        <div class="user-bio-section-body">-->
+<!--          <div class="text-muted">-->
+<!--            {{ this.user.address }}-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
     <image-cropper
@@ -65,7 +65,6 @@ export default {
         return {
           name: '',
           email: '',
-          address: '',
           avatar: '',
           role: ''
         }

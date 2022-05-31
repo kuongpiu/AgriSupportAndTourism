@@ -1,6 +1,6 @@
 <template>
   <el-card v-show="farm.id != null" class="box-card">
-    <h3 style="float: left; padding-bottom: 10px;"><i class="icon-before el-icon-news"></i>Hoạt động gần đây</h3>
+    <h3 style="float: left; padding-bottom: 10px;"><i class="icon-before el-icon-news"></i>Lịch sử</h3>
     <el-timeline style="clear: both">
       <el-timeline-item v-for="(item,index) of farmCareHistoryList" :key="index"
                         :timestamp="item.farmCareHistoryDTO.careDate" placement="top">
@@ -38,7 +38,6 @@
                 </el-avatar>
                 <div style="display: inline-block; margin-left: 20px">
                   <h4>{{ visitor.name }}</h4>
-                  <p>{{ visitor.address }}</p>
                 </div>
               </div>
               <el-avatar
